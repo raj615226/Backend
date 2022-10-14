@@ -11,8 +11,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.verifyemailService = exports.createprofileService = void 0;
 const createprofileService = (Pool, datas) => __awaiter(void 0, void 0, void 0, function* () {
-    const query = `INSERT INTO public.user_details(name,email,phone_number,gender,address,education,platform,age) values ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *;`;
-    const querydata = [datas.name, datas.email, datas.phonenumber, datas.gender, datas.address, datas.education, datas.platform, datas.age];
+    const query = `INSERT INTO public.user_details(name,email,phone_number,gender,address,fathername,platform,mothername) values ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *;`;
+    const querydata = [datas.name, datas.email, datas.phonenumber, datas.gender, datas.address, datas.fathername, datas.platform, datas.mothername];
     return yield Pool.query(query, querydata);
 });
 exports.createprofileService = createprofileService;
