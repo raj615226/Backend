@@ -9,9 +9,9 @@ const pool=new Pool({
     database:process.env.PGDATABASE,
     host: process.env.PGHOST,
     port:port,
-    // ssl:{
-    //     rejectUnauthorized:false
-    // }
+    ssl:{
+        rejectUnauthorized:false
+    }
 })
 pool.connect((err) => {
     if (err) throw err
