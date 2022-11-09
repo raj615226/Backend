@@ -10,9 +10,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.logutService = exports.loginService = exports.verifyemailService = exports.createprofileService = void 0;
-const createprofileService = (Pool, datas) => __awaiter(void 0, void 0, void 0, function* () {
-    const query = `INSERT INTO public.user_details(name,email,phone_number,gender,address,city,state,country,pincode) values ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *;`;
-    const querydata = [datas.name, datas.email, datas.phonenumber, datas.gender, datas.address, datas.city, datas.state, datas.country, datas.pincode];
+const createprofileService = (Pool, datas, password) => __awaiter(void 0, void 0, void 0, function* () {
+    const query = `INSERT INTO public.user_details(name,email,phone_number,gender,address,city,state,country,pincode,password) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *;`;
+    const querydata = [datas.name, datas.email, datas.phonenumber, datas.gender, datas.address, datas.city, datas.state, datas.country, datas.pincode, password];
     return yield Pool.query(query, querydata);
 });
 exports.createprofileService = createprofileService;

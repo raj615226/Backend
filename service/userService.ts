@@ -1,6 +1,6 @@
-export const createprofileService:any=async(Pool:any,datas:any)=>{
-    const query=`INSERT INTO public.user_details(name,email,phone_number,gender,address,city,state,country,pincode) values ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *;`
-    const querydata:any[]=[datas.name,datas.email,datas.phonenumber,datas.gender,datas.address,datas.city,datas.state,datas.country,datas.pincode]
+export const createprofileService:any=async(Pool:any,datas:any,password:any)=>{
+    const query=`INSERT INTO public.user_details(name,email,phone_number,gender,address,city,state,country,pincode,password) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *;`
+    const querydata:any[]=[datas.name,datas.email,datas.phonenumber,datas.gender,datas.address,datas.city,datas.state,datas.country,datas.pincode,password]
     return await Pool.query(query,querydata)  
 }
 export const verifyemailService:any=async(Pool:any,datas:any)=>{

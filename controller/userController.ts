@@ -2,6 +2,7 @@ import express,{Express,Response,Request, RequestHandler} from 'express';
 import Pool from '../config/db';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 import { createprofileService, verifyemailService, loginService, logutService } from '../service/userService';
 interface type {
     status:string,
@@ -16,7 +17,8 @@ export const createprofileController:RequestHandler=async(req:Request,res:Respon
      }
      try{
         const datas:any=req.body;
-        const query:any=await createprofileService(Pool,datas)
+        const hashpassword = await bcrypt.hash(datas.password, 12)
+        const query:any=await createprofileService(Pool,datas,hashpassword)
         if(query.rowCount > 0){
             response = {
                 status: 'success',
@@ -79,6 +81,9 @@ export const  loginController:RequestHandler=async(req:Request,res:Response)=>{
         const data=req.body;
         const query:any=await verifyemailService(Pool,data)
         if(query.rowCount > 0){
+            var hashpassword = query.rows[0].password
+            var isMatch = await bcrypt.compare(data.password,hashpassword)
+            if(isMatch){
             var jwtstring:any=process.env.JWT_SECRET;
             const datas=query.rows[0].email;
             const token = jwt.sign({_id:datas},jwtstring, { expiresIn: '7 days' })
@@ -93,13 +98,20 @@ export const  loginController:RequestHandler=async(req:Request,res:Response)=>{
                 data:responseData
             }
         }
-    else {
+        else {
             response = {
                 status: 'failed',
                 msg: 'There is a problem while inserting data. Please try again later.',
            }
         }
+    }
+        else{
+            return response = {
+                status: 'success',
+                msg: 'Enter a valid password.',
+            }
         }
+    }
         else{
             response = {
                 status: 'failed',

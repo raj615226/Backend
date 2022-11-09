@@ -16,6 +16,7 @@ exports.logutController = exports.loginController = exports.verifyemailControlle
 const db_1 = __importDefault(require("../config/db"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const bcrypt_1 = __importDefault(require("bcrypt"));
 const userService_1 = require("../service/userService");
 dotenv_1.default.config();
 const createprofileController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -25,7 +26,8 @@ const createprofileController = (req, res) => __awaiter(void 0, void 0, void 0, 
     };
     try {
         const datas = req.body;
-        const query = yield (0, userService_1.createprofileService)(db_1.default, datas);
+        const hashpassword = yield bcrypt_1.default.hash(datas.password, 12);
+        const query = yield (0, userService_1.createprofileService)(db_1.default, datas, hashpassword);
         if (query.rowCount > 0) {
             response = {
                 status: 'success',
@@ -94,24 +96,34 @@ const loginController = (req, res) => __awaiter(void 0, void 0, void 0, function
         const data = req.body;
         const query = yield (0, userService_1.verifyemailService)(db_1.default, data);
         if (query.rowCount > 0) {
-            var jwtstring = process.env.JWT_SECRET;
-            const datas = query.rows[0].email;
-            const token = jsonwebtoken_1.default.sign({ _id: datas }, jwtstring, { expiresIn: '7 days' });
-            const querytoken = yield (0, userService_1.loginService)(db_1.default, data, token);
-            if (querytoken.rowCount > 0) {
-                const responseData = {
-                    JwtToken: querytoken.rows[0].token,
-                };
-                response = {
-                    status: 'success',
-                    msg: 'Login successfully',
-                    data: responseData
-                };
+            var hashpassword = query.rows[0].password;
+            var isMatch = yield bcrypt_1.default.compare(data.password, hashpassword);
+            if (isMatch) {
+                var jwtstring = process.env.JWT_SECRET;
+                const datas = query.rows[0].email;
+                const token = jsonwebtoken_1.default.sign({ _id: datas }, jwtstring, { expiresIn: '7 days' });
+                const querytoken = yield (0, userService_1.loginService)(db_1.default, data, token);
+                if (querytoken.rowCount > 0) {
+                    const responseData = {
+                        JwtToken: querytoken.rows[0].token,
+                    };
+                    response = {
+                        status: 'success',
+                        msg: 'Login successfully',
+                        data: responseData
+                    };
+                }
+                else {
+                    response = {
+                        status: 'failed',
+                        msg: 'There is a problem while inserting data. Please try again later.',
+                    };
+                }
             }
             else {
-                response = {
-                    status: 'failed',
-                    msg: 'There is a problem while inserting data. Please try again later.',
+                return response = {
+                    status: 'success',
+                    msg: 'Enter a valid password.',
                 };
             }
         }

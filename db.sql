@@ -11,5 +11,6 @@ CREATE TABLE public.user_details(
    state varchar(50),
    country varchar(50),
    pincode bigserial,
+   password text,
     PRIMARY KEY (user_id)
 );
