@@ -5,4 +5,6 @@ const userController_1 = require("../controller/userController");
 const router = (0, express_1.Router)();
 router.post('/create', userController_1.createprofileController);
 router.post('/verify', userController_1.verifyemailController);
+router.post('/login', userController_1.loginController);
+router.post('/logut', userController_1.logutController);
 exports.default = router;

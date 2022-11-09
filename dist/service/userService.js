@@ -9,10 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verifyemailService = exports.createprofileService = void 0;
+exports.logutService = exports.loginService = exports.verifyemailService = exports.createprofileService = void 0;
 const createprofileService = (Pool, datas) => __awaiter(void 0, void 0, void 0, function* () {
-    const query = `INSERT INTO public.user_details(name,email,phone_number,gender,address,fathername,platform,mothername) values ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *;`;
-    const querydata = [datas.name, datas.email, datas.phonenumber, datas.gender, datas.address, datas.fathername, datas.platform, datas.mothername];
+    const query = `INSERT INTO public.user_details(name,email,phone_number,gender,address,city,state,country,pincode) values ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *;`;
+    const querydata = [datas.name, datas.email, datas.phonenumber, datas.gender, datas.address, datas.city, datas.state, datas.country, datas.pincode];
     return yield Pool.query(query, querydata);
 });
 exports.createprofileService = createprofileService;
@@ -22,3 +22,14 @@ const verifyemailService = (Pool, datas) => __awaiter(void 0, void 0, void 0, fu
     return yield Pool.query(query, querydata);
 });
 exports.verifyemailService = verifyemailService;
+const loginService = (Pool, datas, token) => __awaiter(void 0, void 0, void 0, function* () {
+    const query = `UPDATE public.user_details SET token = $2 WHERE email= $1 RETURNING *;`;
+    const querydata = [datas.email, token];
+    return yield Pool.query(query, querydata);
+});
+exports.loginService = loginService;
+const logutService = (Pool, datas) => __awaiter(void 0, void 0, void 0, function* () {
+    const query = `UPDATE public.user_details SET token = null WHERE email= ${datas} RETURNING *;`;
+    return yield Pool.query(query);
+});
+exports.logutService = logutService;
