@@ -9,27 +9,31 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.logutService = exports.loginService = exports.verifyemailService = exports.createprofileService = void 0;
+exports.getdataService = exports.verifyemailService = exports.createprofileService = void 0;
 const createprofileService = (Pool, datas, password) => __awaiter(void 0, void 0, void 0, function* () {
-    const query = `INSERT INTO public.user_details(name,email,phone_number,gender,address,city,state,country,pincode,password) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *;`;
-    const querydata = [datas.name, datas.email, datas.phonenumber, datas.gender, datas.address, datas.city, datas.state, datas.country, datas.pincode, password];
+    const query = `INSERT INTO public.user_details(name,email,phonenumber,department,address,city,state,country,pincode) values ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *;`;
+    const querydata = [datas.name, datas.email, datas.phone, datas.department, datas.address, datas.city, datas.state, datas.country, datas.pincode];
     return yield Pool.query(query, querydata);
 });
 exports.createprofileService = createprofileService;
 const verifyemailService = (Pool, datas) => __awaiter(void 0, void 0, void 0, function* () {
-    const query = `SELECT * FROM public.user_details WHERE email=$1;`;
-    const querydata = [datas.email];
+    const query = `SELECT * FROM public.user_details WHERE email=$1 AND name=$2 AND department=$3;`;
+    const querydata = [datas.email, datas.name, datas.department];
     return yield Pool.query(query, querydata);
 });
 exports.verifyemailService = verifyemailService;
-const loginService = (Pool, datas, token) => __awaiter(void 0, void 0, void 0, function* () {
-    const query = `UPDATE public.user_details SET token = $2 WHERE email= $1 RETURNING *;`;
-    const querydata = [datas.email, token];
+// export const loginService:any=async(Pool:any,datas:any,token:any)=>{
+//     const query=`UPDATE public.user_details SET token = $2 WHERE email= $1 RETURNING *;`
+//     const querydata:any[]=[datas.email,token]
+//     return await Pool.query(query,querydata)
+// }
+// export const logutService:any=async(Pool:any,datas:any)=>{
+//     const query=`UPDATE public.user_details SET token = null WHERE email= ${datas} RETURNING *;`
+//     return await Pool.query(query)
+// }
+const getdataService = (Pool, datas) => __awaiter(void 0, void 0, void 0, function* () {
+    const query = `SELECT * FROM public.user_details;`;
+    const querydata = [datas.email, datas.name, datas.department];
     return yield Pool.query(query, querydata);
 });
-exports.loginService = loginService;
-const logutService = (Pool, datas) => __awaiter(void 0, void 0, void 0, function* () {
-    const query = `UPDATE public.user_details SET token = null WHERE email= ${datas} RETURNING *;`;
-    return yield Pool.query(query);
-});
-exports.logutService = logutService;
+exports.getdataService = getdataService;
