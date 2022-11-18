@@ -3,7 +3,7 @@ import { createprofileController, verifyemailController } from '../controller/us
 const router=Router();
 
 router.post('/create',createprofileController)
-router.post('/get', verifyemailController)
+router.get('/get', verifyemailController)
 // router.post('/login',loginController)
 // router.post('/logut',logutController)
 
